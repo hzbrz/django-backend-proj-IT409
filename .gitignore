@@ -1,0 +1,10 @@
+# virtual environment
+venv/
+
+.idea
+
+# Django #
+MidtermProject/MidtermApp/__pycache__
+MidtermProject/MidtermApp/migrations
+MidtermProject/db.sqlite3
+MidtermProject/MitdtermProject/__pycache__

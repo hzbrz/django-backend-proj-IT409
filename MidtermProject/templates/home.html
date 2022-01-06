@@ -1,0 +1,167 @@
+{% load static %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <div style="margin-top:2%; justify-content:space-around; display:flex; align-items:center;">
+        <h5> You're logged in as: {{ user.username }}</h5>
+        <a class="btn btn-primary" href="{% url 'logout' %}"> Logout </a>
+    </div>
+
+<!--    {{perms.MidtermApp}}-->
+    <div style="display:flex; justify-content:center;">
+        <div style="width:80%; margin-top:4%;" class="table-responsive">
+            <h4 style="text-align:center; text-decoration:underline;"> Customers </h4>
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                    {% if perms.MidtermApp.add_customer %}
+                        <th></th>
+                        <th scope="col" style="padding:7px 8px 7px 8px;">
+                          <a class="btn btn-primary"
+                             style="padding:4px 8px 4px 5px;"
+                             href="{%url 'create' %}">
+                             ➕ Create Customer
+                          </a>
+                        </th>
+                    {% else %}
+                        <th></th>
+                        <th></th>
+                    {% endif %}
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    {% if perms.MidtermApp.change_customer %}
+                        <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th>
+                    {% endif %}
+                    {% if not perms.MidtermApp %}
+                        <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th> <th></th>
+                    {% endif %}
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for customer in customers %}
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td>{{customer.first_name}}</td>
+                    <td>{{customer.last_name}}</td>
+                    {% if perms.MidtermApp.add_address and perms.MidtermApp.add_address %}
+                        <td><a href="{%url 'create_address' customer.id%}">Create Address</a></td>
+                        <td><a href="{%url 'create_account' customer.id%}">Create Account</a></td>
+                    {% else %}
+                        <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+                    {% endif %}
+                    {% if perms.MidtermApp.change_customer %}
+                        <td style="padding:5px 10px 0px 12px;">
+                            <a class="btn btn-success"
+                               style="padding:4px 8px 4px 5px;"
+                               href="{%url 'edit' customer.id %}">
+                                Edit Customer
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+
+                {% empty %}
+                    <li>Sorry, There are no Customers in the database </li>
+                {% endfor %}
+              </tbody>
+            </table>
+
+            <h4 style="text-align:center;
+                       text-decoration:underline; margin-top:50px;"> Address </h4>
+            <table class="table table-striped">
+              <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Street</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Zip</th>
+                    <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in address %}
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> {{a.customer}}</td>
+                    <td> {{a.street}} </td>
+                    <td> {{a.city}} </td>
+                    <td> {{a.state}} </td>
+                    <td> {{a.zip}}</td>
+                    {% if perms.MidtermApp.change_customer %}
+                    <td style="padding:5px 10px 0px 12px;">
+                        <a class="btn btn-success"
+                           style="padding:4px 8px 4px 5px;"
+                           href="{%url 'edit_address' a.id a.customer.id %}">
+                            Edit Address
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+            <h4 style="text-align:center; text-decoration:underline;"> Account Details </h4>
+            <table class="table">
+              <thead class="thead-dark">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for ac in account %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ac.customer}}</td>
+                    <td>${{ac.balance}}</td>
+                    {% if perms.MidtermApp.change_customer %}
+                        <td> <a href="{%url 'edit_account' ac.id ac.customer.id %}">Edit Account</a></td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    <td style="padding:5px 10px 0px 12px;">
+                        <a class="btn btn-success"
+                           style="padding:4px 8px 4px 5px;"
+                           href="{%url 'transaction' ac.id %}">
+                            Add Transaction
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div style="margin-top:12%; display:flex; flex-direction:column; align-items:center;">
+        <h3 style="margin-bottom:30px;">You are not currently logged in:</h3>
+        <a style="width:20%" class="btn btn-primary" href="{% url 'login' %}"> Login </a>
+    </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% load static %} <!DOCTYPE html>
+{% load widget_tweaks %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add Transaction</title>
+    <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <style>
+        ul {
+            list-style-type: none;
+            padding-left: 15px;
+        }
+
+        #id_initiated_date { width: 150px; }
+    </style>
+</head>
+<div style="display: flex; flex-direction:column; width: 40%; margin: 50px 0px 0px 150px;">
+     {% block content %}
+
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+         <form action="" method="post">
+             {% for field in form.visible_fields %}
+                <div class="form-group">
+                    {% if field.id_for_label == "id_action_0" %}
+                        <label for="{{field.id_for_label}}">Withdraw or Deposit</label>
+                        {{ field | attr:"style:list-style-type: none" }}
+                    {% else %}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field | add_class:'form-control' }}
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <span style="color:red" class="help-block">{{ error }}</span>
+                    {% endfor %}
+                </div>
+             {% endfor %}
+             <div class="form-group">
+                 <button type="submit" class="btn btn-success">
+                      <span class="glyphicon glyphicon-ok"></span> Save
+                 </button>
+                 <a href="{% url 'home' %}" class="btn btn-default">Cancel</a>
+             </div>
+             {% csrf_token %}
+         </form>
+     {% endblock content %}
+</div>
