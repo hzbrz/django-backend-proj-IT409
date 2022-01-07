@@ -4,7 +4,6 @@ Basic dashboard for an online shop
 
 ---
 
-#### Authentication/ Authorization
 <img src="images/login.PNG" />
 
 <img src="images/adminview.PNG" />
